@@ -1,0 +1,182 @@
+openapi: 3.0.0
+info:
+  title: Google Calendar Proxy API
+  description: |
+    Google Apps Scriptを使用して構築されたGoogleカレンダーのイベントにアクセスするためのインターフェース。
+  version: 1.0.0
+servers:
+  - url: https://script.google.com/macros/s/{SCRIPT_ID}/exec
+    description: Google Apps Script Web アプリケーションのエンドポイント
+
+components:
+  schemas:
+    Guest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: ゲストのメールアドレス
+          example: guest@example.com
+        name:
+          type: string
+          description: ゲストの名前
+          example: ゲスト
+        status:
+          type: string
+          description: 参加ステータス
+          example: YES
+
+    CalendarEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          description: イベントのユニークID
+          example: abc123
+        calendarId:
+          type: string
+          description: イベントが属するカレンダーのID
+          example: primary
+        title:
+          type: string
+          description: イベントのタイトル
+          example: ミーティング
+        description:
+          type: string
+          nullable: true
+          description: イベントの説明
+          example: プロジェクト計画について
+        startTime:
+          type: string
+          format: date-time
+          description: 開始時間（ISO 8601形式）
+          example: 2023-01-15T09:00:00Z
+        endTime:
+          type: string
+          format: date-time
+          description: 終了時間（ISO 8601形式）
+          example: 2023-01-15T10:00:00Z
+        location:
+          type: string
+          nullable: true
+          description: イベントの場所
+          example: 会議室A
+        isAllDay:
+          type: boolean
+          description: 終日イベントかどうか
+          example: false
+        creators:
+          type: array
+          description: イベント作成者のメールアドレスリスト
+          items:
+            type: string
+          example: [user@example.com]
+        guestList:
+          type: array
+          description: イベント参加者リスト
+          items:
+            $ref: '#/components/schemas/Guest'
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: エラーメッセージ
+          example: Invalid API key
+
+    EventsResponse:
+      type: object
+      properties:
+        events:
+          type: array
+          description: カレンダーイベントのリスト
+          items:
+            $ref: '#/components/schemas/CalendarEvent'
+
+  parameters:
+    ApiKeyParam:
+      name: apiKey
+      in: query
+      description: API認証キー（認証が有効な場合のみ必須）
+      required: false
+      schema:
+        type: string
+
+paths:
+  /:
+    get:
+      summary: カレンダーイベント一覧を取得
+      description: |
+        指定された期間のカレンダーイベントを取得します。
+        
+        **注意**: Google Apps Scriptの制限により、HTTPステータスコードを明示的に設定できないため、
+        すべてのレスポンスは基本的に200（成功）または500（システムエラー）のみです。
+        アプリケーションロジックによるエラー（パラメータエラーなど）は、HTTPステータスコード200と共に
+        レスポンスボディにエラー情報が含まれた形で返されます。
+      parameters:
+        - name: startDate
+          in: query
+          description: 開始日（ISO 8601形式、例："2023-01-01T00:00:00Z"）
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          description: 終了日（ISO 8601形式）。未指定の場合は開始日の1日分のみ取得
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: calendarIds
+          in: query
+          description: カンマ区切りのカレンダーID文字列。指定なしの場合、すべてのカレンダーから取得
+          required: false
+          schema:
+            type: string
+            example: "primary,secondary@gmail.com"
+        - $ref: '#/components/parameters/ApiKeyParam'
+      summary: カレンダーイベント一覧を取得
+      description: |
+        指定された期間のカレンダーイベントを取得します。
+        
+        **注意**: Google Apps Scriptの制限により、HTTPステータスコードを明示的に設定できないため、
+        すべてのレスポンスは基本的に200（成功）または500（システムエラー）のみです。
+        アプリケーションロジックによるエラー（パラメータエラーなど）は、HTTPステータスコード200と共に
+        レスポンスボディにエラー情報が含まれた形で返されます。
+      responses:
+        '200':
+          description: 正常レスポンス（成功またはアプリケーションレベルのエラーを含む）
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/EventsResponse'
+                  - $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                success:
+                  value:
+                    events:
+                      - id: abc123
+                        calendarId: primary
+                        title: ミーティング
+                        description: プロジェクト計画について
+                        startTime: 2023-01-15T09:00:00Z
+                        endTime: 2023-01-15T10:00:00Z
+                        location: 会議室A
+                        isAllDay: false
+                        creators: [user@example.com]
+                        guestList:
+                          - email: guest@example.com
+                            name: ゲスト
+                            status: YES
+                error:
+                  value:
+                    error: "Invalid request parameters"
+        '500':
+          description: サーバーエラー（Google Apps Scriptシステムによって自動的に返される）
+          content:
+            application/json:
+              schema:
+                type: object
