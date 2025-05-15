@@ -1,5 +1,5 @@
 {
-  "name": "google-calendar-proxy",
+  "name": "google-calendar-api-proxy",
   "version": "1.0.0",
   "description": "Google Calendar REST API Proxy using Google Apps Script",
   "main": "index.js",
