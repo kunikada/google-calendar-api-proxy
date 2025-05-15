@@ -142,7 +142,7 @@ npm run deploy
 
 8. **APIの使用**
    - 上記のステップで取得したURLを使用してAPIにアクセスできます
-   - 例: `https://script.google.com/macros/s/<デプロイID>/exec?start=2025-05-01&end=2025-05-31`
+   - 例: `https://script.google.com/macros/s/<デプロイID>/exec?startDate=2025-05-01&endDate=2025-05-31`
    - APIキーを設定している場合は、APIリクエストにキーを含める必要があります
    - 詳細なAPI使用方法は、`docs/api-usage.md`を参照してください
 
