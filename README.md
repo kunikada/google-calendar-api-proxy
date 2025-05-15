@@ -81,7 +81,7 @@ npm run deploy
 2. **プロジェクトのクローンと開発環境の準備**
    ```bash
    # リポジトリをクローン
-   git clone https://github.com/yourusername/google-calendar-proxy.git
+   git clone https://github.com/kunikada/google-calendar-proxy.git
    cd google-calendar-proxy
    
    # VS Codeで開く
