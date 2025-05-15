@@ -1,4 +1,4 @@
-# Google Calendar Proxy API 使用方法
+# Google Calendar API Proxy 使用方法
 
 ## 概要
 
