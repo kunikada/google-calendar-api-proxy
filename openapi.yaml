@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Google Calendar Proxy API
+  title: Google Calendar API Proxy
   description: |
     Google Apps Scriptを使用して構築されたGoogleカレンダーのイベントにアクセスするためのインターフェース。
   version: 1.0.0
