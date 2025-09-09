@@ -33,7 +33,7 @@
   "author": "kunikada",
   "license": "MIT",
   "devDependencies": {
-    "@types/google-apps-script": "^1.0.79",
+    "@types/google-apps-script": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
     "eslint": "^9.26.0",
