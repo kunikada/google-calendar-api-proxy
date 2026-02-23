@@ -36,7 +36,7 @@
     "@types/google-apps-script": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^8.32.1",
     "@typescript-eslint/parser": "^8.32.1",
-    "eslint": "^9.26.0",
+    "eslint": "^10.0.1",
     "husky": "^9.0.10",
     "lint-staged": "^16.0.0",
     "prettier": "^3.5.3",
